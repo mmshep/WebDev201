@@ -1,0 +1,120 @@
+body {
+    background-color: rgb(242, 237, 230);
+}
+
+.listHeadings {
+    font-size: 20px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.common {
+    position: absolute;
+}
+
+
+.heading {
+    text-align: center;
+    border-bottom: 1px solid rgb(135, 135, 135);
+    border-top: 1px solid rgb(135, 135, 135);
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    height: 80px;
+    font-size:medium;
+    
+}
+
+.list1 {
+    top: 130px;
+    left: 100px;
+}
+
+.list2 {
+    top: 130px;
+    right: 130px;
+}
+
+.list3 {
+    top: 500px;
+    left: 100px;
+}
+
+.list4 {
+    top: 500px;
+    right: 130px;
+}
+
+.ballroom {
+    top: 260px;
+    left: 70px;
+    display: block;
+    line-height: 0px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.latin {
+    top: 260px;
+    right: 50px;
+    line-height: 0px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+
+}
+
+.smooth {
+    top: 630px;
+    left: 50px;
+    line-height: 0px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+
+}
+
+.rhythm {
+    top: 630px;
+    right: 50px;
+    line-height: 0px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.favdance {
+    text-align: center;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    top: 900px;
+    left: 10px;
+    right: 10px;
+    height: 80px;
+}
+.hr {
+    border: none;
+    height: 3px;
+    width: 100%;
+    background-color: #333;
+    margin: 50px auto;
+    top: 830px; 
+}
+.hr2 {
+    border: none;
+    height: 3px;
+    width: 100%;
+    background-color: #333;
+    margin: 50px auto;
+    top: 580px; 
+}
+.byuballroom {
+    text-align: center;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    top: 1550px;
+    left: 10px;
+    right: 10px;
+    height: 80px;
+}
+.footer {
+    top: 2500px;
+    left: 5px;
+    right: 5px;
+    height: 25px;
+}
+.tableau{
+    top: 1800px;
+}

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>World Landmark Quiz Game</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: linear-gradient(120deg, #1e3c72, #2a5298);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .game-container {
+        text-align: center;
+        width: 90%;
+        max-width: 650px;
+        background: rgba(0,0,0,0.45);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    img {
+        width: 100%;
+        height: 320px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        border: 3px solid white;
+    }
+
+    .options button {
+        display: block;
+        width: 100%;
+        margin: 8px 0;
+        padding: 12px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #ffffff;
+        color: #333;
+        transition: 0.2s;
+    }
+
+    .options button:hover {
+        background: #ffd54f;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.85);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: white;
+        color: black;
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        animation: pop 0.4s ease;
+    }
+
+    @keyframes pop {
+        0% { transform: scale(0.3); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        border: none;
+        background: #e53935;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .modal button:hover {
+        background: #c62828;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="game-container">
+    <h2>🌍 Landmark Quiz Game</h2>
+    <p id="question">Which landmark is this?</p>
+
+    <img id="landmarkImage" src="" alt="Landmark">
+
+    <div class="options" id="options"></div>
+
+    <p id="progress"></p>
+</div>
+
+<div class="modal" id="gameOverModal">
+    <div class="modal-content">
+        <h2>💀 Game Over</h2>
+        <p>You chose the wrong answer!</p>
+        <button onclick="restartGame()">Try Again</button>
+    </div>
+</div>
+
+<script>
+const quizData = [
+    {
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Tower%20Bridge%20London.jpg",
+        options: ["Eiffel Tower", "Tower Bridge", "Brooklyn Bridge", "Golden Gate Bridge"],
+        answer: "Tower Bridge"
+    },
+    {
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Taj-Mahal.jpg",
+        options: ["Taj Mahal", "Petra", "Great Wall of China", "Colosseum"],
+        answer: "Taj Mahal"
+    },
+    {
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Colosseum%20in%20Rome.jpg",
+        options: ["Parthenon", "Colosseum", "Pantheon", "Big Ben"],
+        answer: "Colosseum"
+    },
+    {
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Golden%20Gate%20Bridge%20from%20Battery%20Spencer.jpg",
+        options: ["Sydney Opera House", "Golden Gate Bridge", "Brooklyn Bridge", "Millau Viaduct"],
+        answer: "Golden Gate Bridge"
+    },
+
+    {
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Machu%20Picchu%20%28Peru%29.jpg",
+        options: ["Chichen Itza", "Machu Picchu", "Angkor Wat", "Petra"],
+        answer: "Machu Picchu"
+    },
+    {
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Great%20Wall%20of%20China%20near%20Mutianyu.jpg",
+        options: ["Great Wall of China", "Roman Walls", "Berlin Wall", "Hadrian’s Wall"],
+        answer: "Great Wall of China"
+    },
+    {
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Petra%20Jordan%20Al%20Khazneh.jpg",
+        options: ["Petra", "Luxor Temple", "Angkor Wat", "Timbuktu"],
+        answer: "Petra"
+    },
+    {
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Christ%20the%20Redeemer%20%28Rio%29.jpg",
+        options: ["Statue of Liberty", "Christ the Redeemer", "Motherland Calls", "Big Buddha"],
+        answer: "Christ the Redeemer"
+    },
+    {
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Angkor%20Wat%20temple.jpg",
+        options: ["Borobudur", "Angkor Wat", "Bagan Temples", "Karnak"],
+        answer: "Angkor Wat"
+    },
+    {
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Stonehenge%20Sunrise.jpg",
+        options: ["Avebury", "Stonehenge", "Newgrange", "Callanish Stones"],
+        answer: "Stonehenge"
+    },
+    {
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Moai%20Easter%20Island.jpg",
+        options: ["Olmec Heads", "Moai (Easter Island)", "Terracotta Army", "Sphinx"],
+        answer: "Moai (Easter Island)"
+    },
+    {
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Chichen%20Itza%20El%20Castillo.jpg",
+        options: ["Chichen Itza", "Teotihuacan", "Tulum", "Copan"],
+        answer: "Chichen Itza"
+    },
+    {
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Sydney%20Opera%20House.jpg",
+        options: ["Sydney Opera House", "Lotus Temple", "Harpa Concert Hall", "Burj Al Arab"],
+        answer: "Sydney Opera House"
+    },
+    {
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Leaning%20Tower%20of%20Pisa.jpg",
+        options: ["Leaning Tower of Pisa", "Big Ben", "Torres de Serranos", "Campanile di San Marco"],
+        answer: "Leaning Tower of Pisa"
+    }
+];
+
+let currentIndex = 0;
+
+const imageEl = document.getElementById("landmarkImage");
+const optionsEl = document.getElementById("options");
+const progressEl = document.getElementById("progress");
+const modal = document.getElementById("gameOverModal");
+
+function loadQuestion() {
+    const current = quizData[currentIndex];
+
+    imageEl.src = current.image;
+    optionsEl.innerHTML = "";
+
+    current.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.textContent = option;
+        btn.onclick = () => checkAnswer(option);
+        optionsEl.appendChild(btn);
+    });
+
+    progressEl.textContent = `Question ${currentIndex + 1} of ${quizData.length}`;
+}
+
+function checkAnswer(selected) {
+    const correct = quizData[currentIndex].answer;
+
+    if (selected === correct) {
+        currentIndex++;
+        if (currentIndex >= quizData.length) {
+            alert("🎉 You Win! Restarting game...");
+            restartGame();
+        } else {
+            loadQuestion();
+        }
+    } else {
+        showGameOver();
+    }
+}
+
+function showGameOver() {
+    modal.style.display = "flex";
+}
+
+function restartGame() {
+    modal.style.display = "none";
+    currentIndex = 0;
+    loadQuestion();
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
