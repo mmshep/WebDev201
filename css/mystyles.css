@@ -121,3 +121,6 @@ body {
     top: 2000px;
     width: 50%;
 }
+a {
+    color: red;
+}
