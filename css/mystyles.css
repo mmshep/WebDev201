@@ -100,22 +100,22 @@ body {
     width: 100%;
     background-color: #333;
     margin: 50px auto;
-    top: 580px; 
+    top: 620px; 
 }
 .byuballroom {
     text-align: center;
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    top: 1550px;
+    top: 1600px;
     left: 10px;
     right: 10px;
     height: 80px;
 }
 .footer {
-    top: 2500px;
+    top: 2600px;
     left: 5px;
     right: 5px;
     height: 25px;
 }
 .tableau{
-    top: 1800px;
+    top: 1900px;
 }
