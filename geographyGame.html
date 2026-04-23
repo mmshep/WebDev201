@@ -7,47 +7,56 @@
 
 <style>
     body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        background: linear-gradient(120deg, #1e3c72, #2a5298);
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: linear-gradient(120deg, #1e3c72, #2a5298);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow-y: hidden;
+    }   
 
     .game-container {
-        text-align: center;
-        width: 90%;
-        max-width: 650px;
-        background: rgba(0,0,0,0.45);
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    text-align: center;
+    width: 90vw;
+    max-width: 650px;
+    height: 95vh;
+    max-height: 95vh;
+    background: rgba(0,0,0,0.45);
+    padding: 2vh;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
     }
 
     img {
-        width: auto;
-        height: 320px;
-        object-fit: cover;
-        border-radius: 12px;
-        margin-bottom: 15px;
-        border: 3px solid white;
+    width: auto;
+    max-width: 100%;
+    max-height: 35vh;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+    margin: 0 auto;
+    border: 3px solid white;
     }
 
     .options button {
-        display: block;
-        width: 100%;
-        margin: 8px 0;
-        padding: 12px;
-        font-size: 16px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        background: #ffffff;
-        color: #333;
-        transition: 0.2s;
+    display: block;
+    width: 100%;
+    margin: 0.5vh 0;
+    padding: 1.5vh;
+    font-size: clamp(12px, 2vh, 18px);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #ffffff;
+    color: #333;
+    transition: 0.2s;
     }
 
     .options button:hover {
@@ -93,6 +102,16 @@
     .modal button:hover {
         background: #c62828;
     }
+
+    #confettiCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    }     
 </style>
 </head>
 
@@ -116,8 +135,15 @@
         <button onclick="restartGame()">Try Again</button>
     </div>
 </div>
-
+<div class="modal" id="winModal">
+    <div class="modal-content">
+        <h2>🎉 You Win!</h2>
+        <p id="finalScoreText"></p>
+        <button onclick="restartGame()">Play Again</button>
+    </div>
+</div>
 <script>
+const correctSound = new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3")
 const quizData = [
     {
         image: "https://commons.wikimedia.org/wiki/Special:FilePath/Tower%20Bridge%20London.jpg",
@@ -139,7 +165,6 @@ const quizData = [
         options: ["Sydney Opera House", "Golden Gate Bridge", "Brooklyn Bridge", "Millau Viaduct"],
         answer: "Golden Gate Bridge"
     },
-
     {
         image: "https://commons.wikimedia.org/wiki/Special:FilePath/Machu%20Picchu%20%28Peru%29.jpg",
         options: ["Chichen Itza", "Machu Picchu", "Angkor Wat", "Petra"],
@@ -193,36 +218,57 @@ const quizData = [
 ];
 
 let currentIndex = 0;
+let score = 0;
+let shuffledQuizData = [];
 
 const imageEl = document.getElementById("landmarkImage");
 const optionsEl = document.getElementById("options");
 const progressEl = document.getElementById("progress");
 const modal = document.getElementById("gameOverModal");
+const winModal = document.getElementById("winModal");
+const finalScoreText = document.getElementById("finalScoreText");
+
+// Create score display
+const scoreEl = document.createElement("p");
+scoreEl.style.fontSize = "20px";
+scoreEl.style.fontWeight = "bold";
+document.querySelector(".game-container").insertBefore(scoreEl, progressEl);
+
+// Shuffle function
+function shuffleArray(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
 
 function loadQuestion() {
-    const current = quizData[currentIndex];
+    const current = shuffledQuizData[currentIndex];
 
     imageEl.src = current.image;
     optionsEl.innerHTML = "";
 
-    current.options.forEach(option => {
+    // Shuffle answer options
+    const shuffledOptions = shuffleArray([...current.options]);
+
+    shuffledOptions.forEach(option => {
         const btn = document.createElement("button");
         btn.textContent = option;
         btn.onclick = () => checkAnswer(option);
         optionsEl.appendChild(btn);
     });
 
-    progressEl.textContent = `Question ${currentIndex + 1} of ${quizData.length}`;
+    progressEl.textContent = `Question ${currentIndex + 1} of ${shuffledQuizData.length}`;
+    scoreEl.textContent = `⭐ Score: ${score}`;
 }
-
+    
 function checkAnswer(selected) {
-    const correct = quizData[currentIndex].answer;
+    const correct = shuffledQuizData[currentIndex].answer;
 
     if (selected === correct) {
+        correctSound.play();
+        score++;
         currentIndex++;
-        if (currentIndex >= quizData.length) {
-            alert("🎉 You Win! Restarting game...");
-            restartGame();
+
+        if (currentIndex >= shuffledQuizData.length) {
+            showWinModal();
         } else {
             loadQuestion();
         }
@@ -234,15 +280,22 @@ function checkAnswer(selected) {
 function showGameOver() {
     modal.style.display = "flex";
 }
+function showWinModal() {
+    finalScoreText.textContent = `Your Score: ${score}/${shuffledQuizData.length}`;
+    winModal.style.display = "flex";
+}
 
 function restartGame() {
     modal.style.display = "none";
+    winModal.style.display = "none";
     currentIndex = 0;
+    score = 0;
+    shuffledQuizData = shuffleArray([...quizData]);
     loadQuestion();
 }
 
-loadQuestion();
+restartGame();
 </script>
-
+<canvas id="confettiCanvas"></canvas>
 </body>
 </html>
