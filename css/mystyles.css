@@ -111,13 +111,13 @@ body {
     height: 80px;
 }
 
-.tableau{
-    top: 1900px;
-    width: 50%;
-}
 .footer {
     top: 2500px;
     left: 5px;
     right: 5px;
     height: 25px;
+}
+.tableau{
+    top: 1900px;
+    width: 50%;
 }
