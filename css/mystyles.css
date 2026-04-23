@@ -110,12 +110,13 @@ body {
     right: 10px;
     height: 80px;
 }
+
+.tableau{
+    top: 1900px;
+}
 .footer {
-    top: 2600px;
+    top: 3000px;
     left: 5px;
     right: 5px;
     height: 25px;
-}
-.tableau{
-    top: 1900px;
 }
