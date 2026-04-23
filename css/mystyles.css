@@ -121,6 +121,6 @@ body {
     top: 2000px;
     width: 50%;
 }
-a {
+a:visited {
     color: rgb(128,0,128);
 }
